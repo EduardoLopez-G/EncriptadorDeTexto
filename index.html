@@ -46,48 +46,57 @@
                     ['o', 'ober'],
                     ['u', 'ufar'],
                 ]);
+
+                // Validar que el textarea no este vacío
                 const texto = document.querySelector(".txtarea").value;if (texto == null || texto == "") {
                     alert("Primero ingrese el texto a encriptar!");
                     return false;
                 }
-                
-                document.querySelector(".txtarea").value = "";
-
-                //Convertir las letras a minisculas
-                const minisculas = texto.toLowerCase();
-
-                let textocifrado = '';
-                for (let i = 0; i < minisculas.length; i++) {
-                    const char = minisculas.charAt(i);
-                    if (llaves.has(char)) {
-                        textocifrado += llaves.get(char);
-                    } else {
-                        textocifrado += char;
+                // Caract
+                const regex = /^[a-z\s]*$/; // Expresión regular que solo permite letras minúsculas y espacios
+                const cTexto = document.querySelector(".txtarea").value;
+                if (regex.test(cTexto)) {
+                    let textocifrado = '';
+                    for (let i = 0; i < cTexto.length; i++) {
+                        const char = cTexto.charAt(i);
+                        if (llaves.has(char)) {
+                            textocifrado += llaves.get(char);
+                        } else {
+                            textocifrado += char;
+                        }
                     }
+                    document.querySelector(".txtarea").value = "";
+                    //mostrar texto
+                    mostrarTexto();
+                    document.getElementById("texto").textContent = textocifrado;
+                } else {
+                    alert('No se permiten letras con acentos ni caracteres especiales');
                 }
-                
-                //mostrar texto
-                mostrarTexto();
-                document.getElementById("texto").textContent = textocifrado;
             }
 
             function desencriptarTexto(){
+                // Validar que el textarea no este vacío
                 const vTexto = document.querySelector(".txtarea").value;if (vTexto == null || vTexto == "") {
                     alert("Primero ingrese el texto a desencriptar!");
                     return false;
                 }
 
-                const texto = document.querySelector(".txtarea").value;
-                const textocifrado = texto.replace(/enter/gi, "e").replace(/imes/gi, "i").replace(/ai/gi, "a").replace(/ober/gi, "o").replace(/ufar/gi, "u");
-
-                document.querySelector(".txtarea").value = "";
-
-                //mostrar texto
-                mostrarTexto();
-                document.getElementById("texto").textContent = textocifrado;
+                // Validacion de caracteres Especiales
+                const regex = /^[a-z\s]*$/; 
+                const cTexto = document.querySelector(".txtarea").value;
+                if (regex.test(cTexto)) {
+                    const texto = document.querySelector(".txtarea").value;
+                    const textocifrado = texto.replace(/enter/gi, "e").replace(/imes/gi, "i").replace(/ai/gi, "a").replace(/ober/gi, "o").replace(/ufar/gi, "u").replace(/[^a-z\s]/g, '');
+                    document.querySelector(".txtarea").value = "";
+                    //mostrar texto ya traducido
+                    mostrarTexto();
+                    document.getElementById("texto").textContent = textocifrado;
+                } else {
+                    alert('No se permiten letras con acentos ni caracteres especiales');
+                }
             }
 
-            //Hacer visible la encriptacion y ocultar los otros datos
+            //Hacer visible la texto traducido y ocultar los otros datos
             function mostrarTexto(){
                 document.getElementById("munheco").style.display = "none";
                 document.getElementById("h3").style.display = "none";
@@ -98,14 +107,16 @@
 
             //copiar texto
             function copiarEncriptacion() {
-                var texto = document.getElementById("texto");
-                var range = document.createRange();
-                range.selectNode(texto);
-                window.getSelection().addRange(range);
+                var textoCopiado = document.getElementById("texto");
+                var seleccion = window.getSelection();
+                var rango = document.createRange();
+                rango.selectNodeContents(textoCopiado);
+                seleccion.removeAllRanges();
+                seleccion.addRange(rango);
                 document.execCommand("copy");
-                alert("El texto se ha copiado");
-              }
-              
+                seleccion.removeAllRanges();
+                alert("El texto se ha copiado.");
+            }
         </script>
     </body>
 </html>
