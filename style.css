@@ -114,6 +114,7 @@ body {
     font-size: 24px;
     width: 336px;
     height: 80%;
+    word-wrap: break-word;
     display: none;
 }
 
